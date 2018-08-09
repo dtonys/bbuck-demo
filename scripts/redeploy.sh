@@ -1,6 +1,6 @@
 #!/bin/sh
-cd ~/webapps/homeleads
+cd ~/webapps/bbuck-demo
 git pull origin master
 yarn
 npm run build
-forever restart homeleads
+forever restart bbuck-demo

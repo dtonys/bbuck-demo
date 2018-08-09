@@ -1,0 +1,31 @@
+.dashboard {
+  max-width: 400px;
+  margin: auto;
+  margin-top: 100px;
+}
+
+.rows {
+  border-top: solid white 1px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  border-bottom: solid white 1px;
+  height: 50px;
+  padding: 5px;
+}
+
+.rowItem {
+  flex: 1;
+}
+
+.rowItemLabel {
+
+}
+.rowItemTime {
+
+}
+.rowItemGained {
+
+}

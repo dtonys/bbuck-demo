@@ -5,17 +5,13 @@ import {
   Button,
 } from 'semantic-ui-react';
 import {
-  phone as normalizePhone,
-  number as normalizeNumber,
-} from 'helpers/normalizers';
-import {
   Form as RFForm,
   Field as RFField,
 } from 'react-final-form';
 import styles from '../../pages/Home/Home.scss';
 
 
-const SignupForm = ({
+const LoginForm = ({
   onSubmit,
 }) => (
   <div>
@@ -27,15 +23,6 @@ const SignupForm = ({
           className={ styles.form }
           onSubmit={ handleSubmit }
         >
-          {/* <RFFormSpy onChange={onFormStateChange} /> */}
-          <RFField name="username" >
-            {({ input }) => (
-              <Form.Field >
-                <input {...input} className={styles.input} placeholder="username" />
-              </Form.Field>
-            )}
-          </RFField>
-          <br />
           <RFField name="email" >
             {({ input }) => (
               <Form.Field >
@@ -56,7 +43,7 @@ const SignupForm = ({
             <Button
               className={styles.btn}
               size="large"
-            > Signup </Button>
+            > Login </Button>
           </div>
         </Form>
       )}
@@ -64,7 +51,7 @@ const SignupForm = ({
   </div>
 );
 
-SignupForm.propTypes = {
+LoginForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
-export default SignupForm;
+export default LoginForm;
