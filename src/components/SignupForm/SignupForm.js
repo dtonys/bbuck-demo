@@ -5,14 +5,9 @@ import {
   Button,
 } from 'semantic-ui-react';
 import {
-  phone as normalizePhone,
-  number as normalizeNumber,
-} from 'helpers/normalizers';
-import {
   Form as RFForm,
   Field as RFField,
 } from 'react-final-form';
-import styles from '../../pages/Home/Home.scss';
 
 
 const SignupForm = ({
@@ -24,14 +19,13 @@ const SignupForm = ({
     >
       {({ handleSubmit }) => (
         <Form
-          className={ styles.form }
           onSubmit={ handleSubmit }
         >
           {/* <RFFormSpy onChange={onFormStateChange} /> */}
           <RFField name="username" >
             {({ input }) => (
               <Form.Field >
-                <input {...input} className={styles.input} placeholder="username" />
+                <input {...input} placeholder="username" />
               </Form.Field>
             )}
           </RFField>
@@ -54,7 +48,6 @@ const SignupForm = ({
           <br />
           <div style={{ textAlign: 'center' }} >
             <Button
-              className={styles.btn}
               size="large"
             > Signup </Button>
           </div>

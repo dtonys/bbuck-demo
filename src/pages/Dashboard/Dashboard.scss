@@ -5,27 +5,29 @@
 }
 
 .rows {
-  border-top: solid white 1px;
+  border-top: solid #8C8C8C 1px;
 }
 
 .row {
   display: flex;
   align-items: center;
-  border-bottom: solid white 1px;
-  height: 50px;
-  padding: 5px;
+  border-bottom: solid #8C8C8C 1px;
+  height: 60px;
+  padding: 10px 5px;
 }
 
 .rowItem {
   flex: 1;
 }
 
-.rowItemLabel {
-
+.rowItemIcon {
+  margin-left: 20px;
 }
 .rowItemTime {
-
+  text-align: left;
 }
 .rowItemGained {
-
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }

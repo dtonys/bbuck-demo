@@ -8,7 +8,6 @@ import {
   Form as RFForm,
   Field as RFField,
 } from 'react-final-form';
-import styles from '../../pages/Home/Home.scss';
 
 
 const LoginForm = ({
@@ -20,7 +19,6 @@ const LoginForm = ({
     >
       {({ handleSubmit }) => (
         <Form
-          className={ styles.form }
           onSubmit={ handleSubmit }
         >
           <RFField name="email" >
@@ -41,7 +39,6 @@ const LoginForm = ({
           <br />
           <div style={{ textAlign: 'center' }} >
             <Button
-              className={styles.btn}
               size="large"
             > Login </Button>
           </div>

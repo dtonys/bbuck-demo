@@ -1,22 +1,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
-import styles from './App.scss';
+
 import { NOT_FOUND } from 'redux-first-router';
-import Link from 'redux-first-router-link';
 import {
-  ROUTE_HOME,
+  ROUTE_LOGIN,
   ROUTE_SIGNUP,
   ROUTE_DASHBOARD,
+  ROUTE_CASH_OUT,
+  ROUTE_BUY,
+  ROUTE_USER_PROFILE,
 } from 'redux/routesMap';
-import { hot } from 'react-hot-loader';
-import { Menu } from 'semantic-ui-react';
+
+import {
+  getWindowWidth,
+  windowWidthIsMobile,
+  currentWindowWidthIsMobile,
+} from 'helpers/browser';
+import PageLayout from 'components/PageLayout/PageLayout';
+import styles from './App.scss';
 
 
 const actionToComponentPath = {
-  [ ROUTE_HOME ]: 'Home/Home',
+  [ ROUTE_LOGIN ]: 'Login/Login',
   [ ROUTE_SIGNUP ]: 'Signup/Signup',
   [ ROUTE_DASHBOARD ]: 'Dashboard/Dashboard',
+  [ ROUTE_CASH_OUT ]: 'CashOut/CashOut',
+  [ ROUTE_BUY ]: 'Buy/Buy',
+  [ ROUTE_USER_PROFILE ]: 'UserProfile/UserProfile',
   [ NOT_FOUND ]: 'NotFound/NotFound',
 };
 
@@ -33,6 +45,7 @@ class App extends Component {
   constructor( props ) {
     super(props);
     this.state = {
+      isMobile: currentWindowWidthIsMobile(),
       PageComponent: null,
     };
   }
@@ -48,6 +61,21 @@ class App extends Component {
 
   componentDidMount() {
     this.loadComponent();
+    this.handleWindowWidthChanged();
+  }
+
+  handleWindowWidthChanged = () => {
+    let windowWidth = getWindowWidth();
+    window.addEventListener('resize', () => {
+      const nextWindowWidth = getWindowWidth();
+      const windowWidthChanged = ( windowWidthIsMobile(nextWindowWidth) !== windowWidthIsMobile(windowWidth) );
+      if ( windowWidthChanged ) {
+        this.setState({
+          isMobile: windowWidthIsMobile(nextWindowWidth),
+        });
+      }
+      windowWidth = nextWindowWidth;
+    });
   }
 
   componentDidUpdate( prevProps /* , prevState */ ) {
@@ -58,47 +86,16 @@ class App extends Component {
   }
 
   render() {
-    const { PageComponent } = this.state;
+    const { PageComponent, isMobile } = this.state;
 
     return (
       <div className={ styles.app } >
-        { this.props.routeAction !== 'ROUTE_DASHBOARD' &&
-          <Menu className={ styles.menu } >
-            <img
-              style={{
-                height: 20,
-                marginLeft: 20,
-              }}
-              src="/img/logo_horizontal.png" alt=""
-            />
-            <Menu.Menu position='right'>
-              <Menu.Item as={Link} to='/signup'>
-                SIGNUP
-              </Menu.Item>
-              <Menu.Item as={Link} to='/'>
-                LOGIN
-              </Menu.Item>
-            </Menu.Menu>
-          </Menu>
-        }
-        { this.props.routeAction === 'ROUTE_DASHBOARD' &&
-          <Menu className={ styles.menu } >
-            <img
-              style={{
-                height: 20,
-                marginLeft: 20,
-              }}
-              src="/img/logo_horizontal.png" alt=""
-            />
-            <Menu.Menu position='right'>
-              <Menu.Item>
-                DASHBOARD
-              </Menu.Item>
-            </Menu.Menu>
-          </Menu>
-        }
-
-        { PageComponent && <PageComponent /> }
+        <PageLayout isMobile={isMobile} >
+          { PageComponent
+            ? <PageComponent isMobile={isMobile} />
+            : <div></div>
+          }
+        </PageLayout>
       </div>
     );
   }

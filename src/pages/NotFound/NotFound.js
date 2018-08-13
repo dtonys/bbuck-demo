@@ -7,7 +7,10 @@ import styles from './NotFound.scss';
 const NotFoundPage = () => {
   return (
     <div className={styles.notFound} >
-      <Header> Page Not Found </Header>
+      <Header
+        as="h1"
+        className={styles.notFoundText}
+      > Page Not Found </Header>
     </div>
   );
 };
