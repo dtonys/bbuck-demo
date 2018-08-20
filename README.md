@@ -9,7 +9,7 @@ A demo to implement the website and api for bbuck.io
 - Hosted on AWS micro-instance, deployments via a simple shell script
 
 ## Database Schema
-- `malcom_epic_friends`: List of friends, polled and updated every 3 seconds
+- `friends`: List of friends, polled and updated every 3 seconds
   - key: `<epic_id>`:
   - values:
     - `epic_username`
@@ -36,7 +36,7 @@ A user becomes authenticated when they sign up, and add malcom's account as a fr
 
 The server will be polling malcom's account every 3 seconds to see if new friends are added.
 
-The friends list will be stored in `malcom_epic_friends` table, and will be updated whenever a new friend is detected.
+The friends list will be stored in `friends` table, and will be updated whenever a new friend is detected.
 
 As the friends list returns only the `epic_user_id`, and the user provides the `epic_username`, we need a way to connect the two.
 We'll do a GET request to `https://fortniteapi.com/profile/<epic_username>/pc` to get the `epic_user_id` given an `epic_username`.
