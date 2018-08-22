@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { hot } from 'react-hot-loader';
 import SignupForm from 'components/SignupForm/SignupForm';
 import Link from 'redux-first-router-link';
@@ -7,22 +8,38 @@ import styles from './Signup.scss';
 
 
 class SignupPage extends Component {
+  static propTypes = {
+    signup: PropTypes.func.isRequired,
+  };
+
   constructor( props ) {
     super(props);
     this.state = {
-      submitted: false,
+      submitSuccess: false,
+      submitError: false,
     };
   }
 
   onFormSubmit = ( values ) => {
-    console.log( JSON.stringify(values) );
-    this.setState({
-      submitted: true,
-    });
+
+    this.props.signup(values)
+      .then(() => {
+        this.setState({
+          submitSuccess: true,
+        });
+      })
+      .catch(() => {
+        this.setState({
+          submitError: true,
+        });
+      });
   }
 
   render() {
-    const { submitted } = this.state;
+    const {
+      submitSuccess,
+      submitError,
+    } = this.state;
 
     return (
       <div className={styles.signupPageWrap} >
@@ -39,8 +56,16 @@ class SignupPage extends Component {
           </span>
         </div>
         <div className={styles.signup}>
-          { !submitted &&
+          { !submitSuccess &&
             <div>
+              { submitError &&
+                <div>
+                  <div style={{ color: '#ED4D50' }} >
+                    Invalid data. Please try again.
+                  </div>
+                  <br />
+                </div>
+              }
               <SignupForm
                 onSubmit={ this.onFormSubmit }
               />
@@ -75,7 +100,7 @@ class SignupPage extends Component {
 
             </div>
           }
-          { submitted &&
+          { submitSuccess &&
             <div style={{ textAlign: 'center' }} >
               <p style={{ color: '#FFFFFF', fontSize: 18 }} >
                 {`Thanks for signing up! `}

@@ -6,7 +6,7 @@
   "author": "dtonys@gmail.com <dtonys@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --delay 2 --watch src/server.js --exec node src/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon --delay 2 --watch src/server.js --watch src/api.js --exec node src/server.js",
     "build": "npm-run-all clean build-prod",
     "start": "cross-env NODE_ENV=production PORT=3000 forever start --uid bbuck-demo --append src/server.js",
     "start-prod": "cross-env NODE_ENV=production PORT=80 forever start --uid bbuck-demo --append src/server.js",

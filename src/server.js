@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 app.use(requestIp.mw());
 
 // api routes
-require('./api')( app );
+require('./server/api')( app );
 
 // serve production html
 app.get('*', ( req, res ) => {

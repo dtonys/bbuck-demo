@@ -11,7 +11,7 @@ const TimeFixPlugin = require('time-fix-plugin');
 
 
 const PATHS = {
-  entry: path.resolve(__dirname, 'src', 'index.js'),
+  entry: path.resolve(__dirname, 'src', 'client.js'),
   src: path.resolve(__dirname, 'src'),
   dist: path.resolve(__dirname, 'dist'),
 };

@@ -23,6 +23,7 @@ class Navbar extends Component {
     routeAction: PropTypes.string.isRequired,
     isMobile: PropTypes.bool.isRequired,
     openSidebar: PropTypes.func.isRequired,
+    logout: PropTypes.func.isRequired,
   };
 
   // constructor( props ) {
@@ -34,6 +35,7 @@ class Navbar extends Component {
       routeAction,
       isMobile,
       openSidebar,
+      logout,
     } = this.props;
     const isLoggedIn = isRouteLoggedIn(routeAction);
 
@@ -74,7 +76,7 @@ class Navbar extends Component {
                 <Menu.Item key="4" as={Link} to="/dashboard">
                   DASHBOARD
                 </Menu.Item>,
-                <Menu.Item key="5" as={Link} to="/">
+                <Menu.Item key="5" onClick={logout} >
                   LOGOUT
                 </Menu.Item>,
               ]

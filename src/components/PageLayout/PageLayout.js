@@ -19,6 +19,7 @@ class PageLayout extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     isMobile: PropTypes.bool.isRequired,
+    logout: PropTypes.func.isRequired,
   };
 
   constructor( props ) {
@@ -34,6 +35,11 @@ class PageLayout extends Component {
     });
   }
 
+  onLogoutClick = () => {
+    this.closeSidebar();
+    this.props.logout();
+  }
+
   closeSidebar = () => {
     if ( !this.state.mobileSidebarOpen ) return;
     this.setState({
@@ -43,7 +49,7 @@ class PageLayout extends Component {
 
   render() {
     const { mobileSidebarOpen } = this.state;
-    const { children, isMobile, routeAction } = this.props;
+    const { children, isMobile, routeAction, logout } = this.props;
     const isLoggedIn = isRouteLoggedIn(routeAction);
 
     return (
@@ -116,9 +122,7 @@ class PageLayout extends Component {
                   </Menu.Item>,
                   <Menu.Item
                     key="5"
-                    as={Link}
-                    to="/"
-                    onClick={this.closeSidebar}
+                    onClick={this.onLogoutClick}
                   >
                     LOGOUT
                   </Menu.Item>,
@@ -133,6 +137,7 @@ class PageLayout extends Component {
             <Navbar
               isMobile={isMobile}
               openSidebar={this.openSidebar}
+              logout={logout}
             />
             { children }
           </Sidebar.Pusher>

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { redirect, NOT_FOUND } from 'redux-first-router';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 
-import { NOT_FOUND } from 'redux-first-router';
 import {
   ROUTE_LOGIN,
   ROUTE_SIGNUP,
@@ -11,6 +11,7 @@ import {
   ROUTE_CASH_OUT,
   ROUTE_BUY,
   ROUTE_USER_PROFILE,
+  isRouteLoggedIn,
 } from 'redux/routesMap';
 
 import {
@@ -47,6 +48,14 @@ class App extends Component {
     this.state = {
       isMobile: currentWindowWidthIsMobile(),
       PageComponent: null,
+      // user session
+      user: null,
+      // login state
+      loginLoaded: false,
+      loginSuccess: false,
+      // signup state
+      signupLoaded: false,
+      signupSuccess: false,
     };
   }
 
@@ -59,9 +68,15 @@ class App extends Component {
     });
   }
 
-  componentDidMount() {
-    this.loadComponent();
+  async componentDidMount() {
+    const { routeAction } = this.props;
     this.handleWindowWidthChanged();
+    const user = await this.getSession();
+    // On page load, redirect to login if not logged in
+    if ( !user && isRouteLoggedIn(routeAction) ) {
+      this.props.dispatch( redirect({ type: ROUTE_LOGIN }) );
+    }
+    this.loadComponent();
   }
 
   handleWindowWidthChanged = () => {
@@ -85,15 +100,88 @@ class App extends Component {
     }
   }
 
+  login = () => {
+    return new Promise(( resolve, reject ) => {
+      setTimeout(() => {
+        const loginSuccess = true;
+        // success
+        if ( loginSuccess ) {
+          this.getSession()
+            .then(() => {
+              resolve();
+            });
+        }
+        else reject();
+      }, 1000);
+    });
+  };
+
+  logout = () => {
+    return new Promise(( resolve, reject ) => {
+      setTimeout(() => {
+        this.setState({
+          user: null,
+        });
+        this.props.dispatch( redirect({ type: ROUTE_LOGIN }) );
+        resolve();
+      }, 1000);
+    });
+  };
+
+  signup = () => {
+    return new Promise(( resolve, reject ) => {
+      setTimeout(() => {
+        const signupSuccess = true;
+        // success
+        if ( signupSuccess ) resolve();
+        else reject();
+      }, 1000);
+    });
+  };
+
+  getSession = () => {
+    return new Promise(( resolve, reject ) => {
+      setTimeout(() => {
+        // success, error
+        const user = null;
+        // const user = {
+        //   username: 'tony',
+        // };
+        this.setState({
+          user: user,
+        });
+        resolve( user );
+      }, 1000);
+    });
+  }
+
   render() {
-    const { PageComponent, isMobile } = this.state;
+    const {
+      PageComponent,
+      isMobile,
+      user,
+      loginLoaded, loginSuccess,
+      signupLoaded, signupSuccess,
+    } = this.state;
 
     return (
       <div className={ styles.app } >
-        <PageLayout isMobile={isMobile} >
+        <PageLayout
+          isMobile={isMobile}
+          logout={this.logout}
+        >
           { PageComponent
-            ? <PageComponent isMobile={isMobile} />
-            : <div></div>
+            ? <PageComponent
+              isMobile={isMobile}
+              user={user}
+              loginLoaded={loginLoaded}
+              loginSuccess={loginSuccess}
+              signupLoaded={signupLoaded}
+              signupSuccess={signupSuccess}
+              login={this.login}
+              signup={this.signup}
+            />
+            : <div> Loading... </div>
           }
         </PageLayout>
       </div>
