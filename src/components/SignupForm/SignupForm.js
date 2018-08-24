@@ -22,10 +22,10 @@ const SignupForm = ({
           onSubmit={ handleSubmit }
         >
           {/* <RFFormSpy onChange={onFormStateChange} /> */}
-          <RFField name="username" >
+          <RFField name="fortnite_username" >
             {({ input }) => (
               <Form.Field >
-                <input {...input} placeholder="username" />
+                <input {...input} placeholder="fortnite username" />
               </Form.Field>
             )}
           </RFField>

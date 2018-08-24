@@ -20,7 +20,7 @@ class LoginPage extends Component {
   constructor( props ) {
     super(props);
     this.state = {
-      loginError: false,
+      loginErrorMessage: false,
     };
   }
 
@@ -30,15 +30,15 @@ class LoginPage extends Component {
       .then(() => {
         this.props.dispatch( redirect({ type: ROUTE_DASHBOARD }) );
       })
-      .catch(() => {
+      .catch(( errorMessage ) => {
         this.setState({
-          loginError: true,
+          loginErrorMessage: errorMessage,
         });
       });
   }
 
   render() {
-    const { loginError } = this.state;
+    const { loginErrorMessage } = this.state;
     return (
       <div className={styles.loginPageWrap} >
         <div style={{ marginTop: 100 }} ></div>
@@ -56,10 +56,10 @@ class LoginPage extends Component {
         <div className={styles.login}>
           <br /><br /><br />
           <div>
-            { loginError &&
+            { loginErrorMessage &&
               <div>
                 <div style={{ color: '#ED4D50' }} >
-                  Invalid credentials. Please try again.
+                 { loginErrorMessage }
                 </div>
                 <br />
               </div>

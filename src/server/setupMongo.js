@@ -8,6 +8,7 @@ mongoose.Promise = global.Promise;
 // require all models
 require('./models/session');
 require('./models/user');
+require('./models/pending_user');
 
 // setup connection
 module.exports = () => {

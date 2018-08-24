@@ -16,7 +16,7 @@ class SignupPage extends Component {
     super(props);
     this.state = {
       submitSuccess: false,
-      submitError: false,
+      submitErrorMessage: false,
     };
   }
 
@@ -28,9 +28,9 @@ class SignupPage extends Component {
           submitSuccess: true,
         });
       })
-      .catch(() => {
+      .catch(( errorMessage ) => {
         this.setState({
-          submitError: true,
+          submitErrorMessage: errorMessage,
         });
       });
   }
@@ -38,7 +38,7 @@ class SignupPage extends Component {
   render() {
     const {
       submitSuccess,
-      submitError,
+      submitErrorMessage,
     } = this.state;
 
     return (
@@ -58,10 +58,10 @@ class SignupPage extends Component {
         <div className={styles.signup}>
           { !submitSuccess &&
             <div>
-              { submitError &&
+              { submitErrorMessage &&
                 <div>
                   <div style={{ color: '#ED4D50' }} >
-                    Invalid data. Please try again.
+                    { submitErrorMessage }
                   </div>
                   <br />
                 </div>
@@ -97,7 +97,6 @@ class SignupPage extends Component {
                   <Link to="/" style={{ color: '#ED4D50' }} >Log in!</Link>
                 </p>
               </div>
-
             </div>
           }
           { submitSuccess &&
@@ -108,7 +107,7 @@ class SignupPage extends Component {
               <p style={{ color: '#FFFFFF', fontSize: 18 }} >
                 {`Please verify your account by logging in to your epic client and adding`}
               </p>
-              <p style={{ color: '#ED4D50', fontSize: 24 }} > malcolmf </p>
+              <p style={{ color: '#ED4D50', fontSize: 24 }} > Bbuckio </p>
               <p style={{ color: '#FFFFFF', fontSize: 18 }} >
                 {`to your friends list.`}
               </p>

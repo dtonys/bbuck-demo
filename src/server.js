@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const serializeError = require('serialize-error');
 
 const path = require('path');
@@ -56,6 +57,7 @@ function createExpressApp() {
   }
 
   app.use( express.static('public') );
+  app.use( cookieParser() );
   app.use( bodyParser.urlencoded({ extended: true }) );
   app.use( bodyParser.json() );
 

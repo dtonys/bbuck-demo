@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import lodashGet from 'lodash/get';
 import { redirect, NOT_FOUND } from 'redux-first-router';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
+import { clientRequest } from 'helpers/request';
 
 import {
   ROUTE_LOGIN,
@@ -100,19 +102,21 @@ class App extends Component {
     }
   }
 
-  login = () => {
+  login = ( values ) => {
+
     return new Promise(( resolve, reject ) => {
-      setTimeout(() => {
-        const loginSuccess = true;
-        // success
-        if ( loginSuccess ) {
-          this.getSession()
-            .then(() => {
-              resolve();
-            });
-        }
-        else reject();
-      }, 1000);
+      clientRequest('/api/login', {
+        method: 'POST',
+        body: values,
+      })
+        .then(( responseBody ) => {
+          // responseBody.sessionToken
+          resolve();
+        })
+        .catch(( responseBody ) => {
+          const errorMessage = lodashGet(responseBody, 'error.message');
+          reject( errorMessage || 'Invalid data' );
+        });
     });
   };
 
@@ -128,14 +132,19 @@ class App extends Component {
     });
   };
 
-  signup = () => {
+  signup = ( values ) => {
     return new Promise(( resolve, reject ) => {
-      setTimeout(() => {
-        const signupSuccess = true;
-        // success
-        if ( signupSuccess ) resolve();
-        else reject();
-      }, 1000);
+      clientRequest('/api/signup', {
+        method: 'POST',
+        body: values,
+      })
+        .then(() => {
+          resolve();
+        })
+        .catch(( responseBody ) => {
+          const errorMessage = lodashGet(responseBody, 'error.message');
+          reject( errorMessage || 'Invalid data' );
+        });
     });
   };
 
