@@ -7,7 +7,6 @@ import {
   Sidebar,
   Menu,
 } from 'semantic-ui-react';
-import { isRouteLoggedIn } from 'redux/routesMap';
 
 
 @connect(
@@ -20,6 +19,10 @@ class PageLayout extends Component {
     children: PropTypes.node.isRequired,
     isMobile: PropTypes.bool.isRequired,
     logout: PropTypes.func.isRequired,
+    user: PropTypes.object,
+  };
+  static defaultProps = {
+    user: null,
   };
 
   constructor( props ) {
@@ -49,8 +52,22 @@ class PageLayout extends Component {
 
   render() {
     const { mobileSidebarOpen } = this.state;
-    const { children, isMobile, routeAction, logout } = this.props;
-    const isLoggedIn = isRouteLoggedIn(routeAction);
+    const {
+      children,
+      isMobile,
+      logout,
+      user,
+    } = this.props;
+    const isLoggedIn = Boolean(user);
+
+    let truncatedUsername = null;
+    if ( isLoggedIn ) {
+      truncatedUsername = (
+        user.fortnite_username.length >= 10
+          ? user.fortnite_username.slice(0, 7) + '...'
+          : user.fortnite_username
+      );
+    }
 
     return (
       <div style={{ height: '100%' }} >
@@ -88,14 +105,12 @@ class PageLayout extends Component {
               }
               { isLoggedIn &&
                 [
-                  // <Menu.Item
-                  //   key="1"
-                  //   as={Link}
-                  //   to="/profile"
-                  //   onClick={this.closeSidebar}
-                  // >
-                  //   PROFILE
-                  // </Menu.Item>,
+                  <Menu.Item
+                    key="1"
+                    onClick={this.closeSidebar}
+                  >
+                    { truncatedUsername.toUpperCase() }
+                  </Menu.Item>,
                   // <Menu.Item
                   //   key="2"
                   //   as={Link}
@@ -138,6 +153,7 @@ class PageLayout extends Component {
               isMobile={isMobile}
               openSidebar={this.openSidebar}
               logout={logout}
+              user={user}
             />
             { children }
           </Sidebar.Pusher>

@@ -14,6 +14,7 @@ import {
   ROUTE_BUY,
   ROUTE_USER_PROFILE,
   isRouteLoggedIn,
+  isRouteLoggedOut,
 } from 'redux/routesMap';
 
 import {
@@ -43,6 +44,7 @@ const actionToComponentPath = {
 class App extends Component {
   static propTypes = {
     routeAction: PropTypes.string.isRequired,
+    dispatch: PropTypes.func.isRequired,
   };
 
   constructor( props ) {
@@ -70,15 +72,27 @@ class App extends Component {
     });
   }
 
+  authRedirect = ( user, routeAction ) => {
+    // On page load...
+    // redirect to login page if hitting logged in page while logged out
+    if ( !user && isRouteLoggedIn(routeAction) ) {
+      this.props.dispatch( redirect({ type: ROUTE_LOGIN }) );
+      return true;
+    }
+    // redirect to dashboard page if hitting logged out page while logged in
+    if ( user && isRouteLoggedOut(routeAction) ) {
+      this.props.dispatch( redirect({ type: ROUTE_DASHBOARD }) );
+      return true;
+    }
+    return false;
+  }
+
   async componentDidMount() {
     const { routeAction } = this.props;
     this.handleWindowWidthChanged();
     const user = await this.getSession();
-    // On page load, redirect to login if not logged in
-    if ( !user && isRouteLoggedIn(routeAction) ) {
-      this.props.dispatch( redirect({ type: ROUTE_LOGIN }) );
-    }
-    this.loadComponent();
+    const redirected = this.authRedirect(user, routeAction);
+    if ( !redirected ) this.loadComponent();
   }
 
   handleWindowWidthChanged = () => {
@@ -103,15 +117,13 @@ class App extends Component {
   }
 
   login = ( values ) => {
-
     return new Promise(( resolve, reject ) => {
       clientRequest('/api/login', {
         method: 'POST',
         body: values,
       })
         .then(( responseBody ) => {
-          // responseBody.sessionToken
-          resolve();
+          this.setState({ user: responseBody.data.user }, () => resolve() );
         })
         .catch(( responseBody ) => {
           const errorMessage = lodashGet(responseBody, 'error.message');
@@ -121,14 +133,17 @@ class App extends Component {
   };
 
   logout = () => {
-    return new Promise(( resolve, reject ) => {
-      setTimeout(() => {
-        this.setState({
-          user: null,
+    return new Promise(( resolve /* , reject */ ) => {
+      clientRequest('/api/logout', {
+        method: 'GET',
+      })
+        .then(() => {
+          this.setState({
+            user: null,
+          });
+          this.props.dispatch( redirect({ type: ROUTE_LOGIN }) );
+          resolve();
         });
-        this.props.dispatch( redirect({ type: ROUTE_LOGIN }) );
-        resolve();
-      }, 1000);
     });
   };
 
@@ -142,25 +157,21 @@ class App extends Component {
           resolve();
         })
         .catch(( responseBody ) => {
-          const errorMessage = lodashGet(responseBody, 'error.message');
+          const errorMessage = lodashGet(responseBody, 'error.message', null);
           reject( errorMessage || 'Invalid data' );
         });
     });
   };
 
   getSession = () => {
-    return new Promise(( resolve, reject ) => {
-      setTimeout(() => {
-        // success, error
-        const user = null;
-        // const user = {
-        //   username: 'tony',
-        // };
-        this.setState({
-          user: user,
+    return new Promise(( resolve /* , reject */ ) => {
+      clientRequest('/api/session', {
+        method: 'GET',
+      })
+        .then(( responseBody ) => {
+          const user = lodashGet(responseBody, 'data.user', null);
+          this.setState({ user }, () => resolve(user) );
         });
-        resolve( user );
-      }, 1000);
     });
   }
 
@@ -178,11 +189,11 @@ class App extends Component {
         <PageLayout
           isMobile={isMobile}
           logout={this.logout}
+          user={user}
         >
           { PageComponent
             ? <PageComponent
               isMobile={isMobile}
-              user={user}
               loginLoaded={loginLoaded}
               loginSuccess={loginSuccess}
               signupLoaded={signupLoaded}
@@ -190,7 +201,19 @@ class App extends Component {
               login={this.login}
               signup={this.signup}
             />
-            : <div> Loading... </div>
+            : (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  marginTop: -10,
+                  marginLeft: -47.5,
+                  fontSize: 20,
+                }}
+              > Loading...
+              </div>
+            )
           }
         </PageLayout>
       </div>

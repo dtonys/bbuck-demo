@@ -4,7 +4,6 @@ import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 import Link from 'redux-first-router-link';
 
-import { isRouteLoggedIn } from 'redux/routesMap';
 import {
   Menu,
   Icon,
@@ -24,20 +23,29 @@ class Navbar extends Component {
     isMobile: PropTypes.bool.isRequired,
     openSidebar: PropTypes.func.isRequired,
     logout: PropTypes.func.isRequired,
+    user: PropTypes.object,
   };
-
-  // constructor( props ) {
-  //   super(props);
-  // }
+  static defaultProps = {
+    user: null,
+  };
 
   render() {
     const {
-      routeAction,
       isMobile,
       openSidebar,
       logout,
+      user,
     } = this.props;
-    const isLoggedIn = isRouteLoggedIn(routeAction);
+    const isLoggedIn = Boolean(user);
+    let truncatedUsername = null;
+
+    if ( isLoggedIn ) {
+      truncatedUsername = (
+        user.fortnite_username.length >= 10
+          ? user.fortnite_username.slice(0, 7) + '...'
+          : user.fortnite_username
+      );
+    }
 
     return (
       <div className={ styles.navbarWrap }>
@@ -63,9 +71,9 @@ class Navbar extends Component {
             }
             { !isMobile && isLoggedIn &&
               [
-                // <Menu.Item key="1" as={Link} to="/profile">
-                //   PROFILE
-                // </Menu.Item>,
+                <Menu.Item key="1">
+                  { truncatedUsername.toUpperCase() }
+                </Menu.Item>,
 
                 // <Menu.Item key="2" as={Link} to="/buy">
                 //   BUY

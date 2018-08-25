@@ -12,13 +12,17 @@ export const LOGGED_IN_ROUTES = {
   ROUTE_USER_PROFILE: true,
 };
 
-// export const LOGGED_OUT_ROUTES = {
-//   ROUTE_LOGIN: true,
-//   ROUTE_SIGNUP: true,
-// };
+export const LOGGED_OUT_ROUTES = {
+  ROUTE_LOGIN: true,
+  ROUTE_SIGNUP: true,
+};
 
 export function isRouteLoggedIn( routeAction ) {
   return Boolean(LOGGED_IN_ROUTES[routeAction]);
+}
+
+export function isRouteLoggedOut( routeAction ) {
+  return Boolean(LOGGED_OUT_ROUTES[routeAction]);
 }
 
 const routesMap = {

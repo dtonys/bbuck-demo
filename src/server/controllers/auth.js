@@ -141,8 +141,18 @@ exports.login = handleAsyncError(
     }
     // log the user in -> set cookie, return token for mobile
     const sessionId = await createSessionWithCookie( user._id.toString(), req, res );
+    const { currentUser } = await getCurrentSessionAndUser( sessionId );
+
+    // remove sensitive data
+    const _currentUser = currentUser.toObject();
+    delete _currentUser.password_hash;
+    delete _currentUser.__v;
+
     res.json({
-      sessionToken: sessionId,
+      data: {
+        sessionToken: sessionId,
+        user: _currentUser,
+      },
     });
   }
 );
@@ -164,14 +174,15 @@ exports.session = handleAsyncError(
       });
       return;
     }
-    const _currentUser = currentUser.toObject();
     // remove sensitive data
+    const _currentUser = currentUser.toObject();
     delete _currentUser.password_hash;
+    delete _currentUser.__v;
 
     res.json({
       data: {
-        currentUser: _currentUser,
-        currentSession,
+        user: _currentUser,
+        session: currentSession,
       },
     });
   }
