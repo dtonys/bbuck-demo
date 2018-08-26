@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const parseDomain = require('parse-domain');
 const Schema = mongoose.Schema;
 const createEncryptor = require('simple-encryptor');
-const PendingUser = require('../models/pending_user');
+const User = require('../models/user');
 
 const encryptor = createEncryptor( process.env.ENCRYPTION_SECRET );
 const SESSION_DURATION_SECONDS = 60 * 60 * 24;
@@ -60,7 +60,7 @@ exports.getCurrentSessionAndUser = async function getCurrentSessionAndUser( sess
   }
   const userId = encryptor.decrypt(sessionId);
   const [ currentUser, currentSession ] = await Promise.all([
-    PendingUser.findOne({ _id: userId }),
+    User.findOne({ _id: userId }),
     Session.findOne({ _id: sessionId }),
   ]);
   return {

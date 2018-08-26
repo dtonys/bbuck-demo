@@ -7,7 +7,9 @@ const createSessionWithCookie = SessionModule.createSessionWithCookie;
 const getCurrentSessionAndUser = SessionModule.getCurrentSessionAndUser;
 const deleteSession = SessionModule.deleteSession;
 const SESSION_COOKIE_NAME = SessionModule.SESSION_COOKIE_NAME;
-
+const EpicGamesMetaModule = require('../models/epic_games_meta');
+const EpicGamesService = '../services/epicGames';
+const verifyPendingUser = EpicGamesService.verifyPendingUser;
 
 exports.signup = handleAsyncError(
   async ( req, res ) => {
@@ -29,9 +31,9 @@ exports.signup = handleAsyncError(
     }
 
     // cleanup input
-    fortnite_username = fortnite_username.trim();
-    email = email.trim().toLowerCase();
-    password = password.trim();
+    fortnite_username = fortnite_username ? fortnite_username.trim() : '';
+    email = email ? email.trim().toLowerCase() : '';
+    password = password ? password.trim() : '';
 
     // if a username or email is already pending, return error
     const pendingUsers = await Promise.all([
@@ -86,6 +88,13 @@ exports.signup = handleAsyncError(
       password_hash: passwordHash,
     });
 
+    // if user is already a friend, send the verification email
+    const epicGamesMeta = await EpicGamesMetaModule.getInstance();
+    const friendsMap = JSON.parse(epicGamesMeta.friendMap);
+    if ( friendsMap[fortnite_username] ) {
+      await verifyPendingUser(fortnite_username);
+    }
+
     // return success
     res.json({
       data: pendingUser,
@@ -103,17 +112,28 @@ exports.login = handleAsyncError(
     console.log('req.body', req.body);
 
     // cleanup input
-    email = email.trim().toLowerCase();
-    password = password.trim();
+    email = email ? email.trim().toLowerCase() : '';
+    password = password ? password.trim() : '';
 
-    // find user by email
-    const user = await PendingUser.findOne({ email: email });
+
+    const pendingUser = await PendingUser.findOne({ email: email });
+    const user = await User.findOne({ email: email });
+    // if only a pending user is found, show error
+    if ( pendingUser && !user ) {
+      res.status(422);
+      res.json({
+        error: {
+          message: 'This account is pending verification',
+        },
+      });
+      return;
+    }
     // check user not found
     if ( !user ) {
       res.status(404);
       res.json({
         error: {
-          message: 'Email not found',
+          message: 'Account not found',
         },
       });
       return;
@@ -142,6 +162,8 @@ exports.login = handleAsyncError(
     // log the user in -> set cookie, return token for mobile
     const sessionId = await createSessionWithCookie( user._id.toString(), req, res );
     const { currentUser } = await getCurrentSessionAndUser( sessionId );
+    console.log('currentUser');
+    console.log(currentUser);
 
     // remove sensitive data
     const _currentUser = currentUser.toObject();
@@ -204,3 +226,26 @@ exports.logout = handleAsyncError(
     });
   }
 );
+
+// Promote pending user to real user, allowing them to log in
+exports.verify = handleAsyncError(
+  async ( req, res ) => {
+    const fortnite_username = req.query.fortnite_username;
+    const pendingUser = await PendingUser.findOne({ fortnite_username: fortnite_username });
+    if ( !pendingUser ) {
+      res.redirect('/');
+      return;
+    }
+
+    // copy info from pending user to validated user
+    await User.create({
+      fortnite_username: pendingUser.fortnite_username,
+      email: pendingUser.email,
+      password_hash: pendingUser.password_hash,
+    });
+
+    // redirect to login page
+    res.redirect('/');
+  }
+);
+

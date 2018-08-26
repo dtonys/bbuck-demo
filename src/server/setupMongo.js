@@ -9,9 +9,10 @@ mongoose.Promise = global.Promise;
 require('./models/session');
 require('./models/user');
 require('./models/pending_user');
+require('./models/epic_games_meta');
 
-// setup connection
-module.exports = () => {
+
+function mongoConnect() {
   return new Promise(( resolve, reject ) => {
     const connection = mongoose.connect(`${process.env.MONGODB_CONNECTION_URL}/${process.env.MONGODB_DATABASE_NAME}`, {
       promiseLibrary: global.Promise,
@@ -25,4 +26,16 @@ module.exports = () => {
         reject(error);
       });
   });
+}
+
+// setup connection
+module.exports = () => {
+  return Promise.resolve()
+    .then(() => {
+      return mongoConnect();
+    })
+    .then(() => {
+      const EpicGamesService = require('./services/epicGames');
+      return EpicGamesService.initialize();
+    });
 };

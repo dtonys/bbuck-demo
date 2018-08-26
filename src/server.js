@@ -100,6 +100,9 @@ async function bootstrap() {
   // setup mongodb
   await require('./server/setupMongo')();
 
+  // // initialize epic games service
+  // await require('./server/services/epicGames').initialize();
+
   // initialize express
   const app = createExpressApp();
   await startExpressServer(app);
@@ -108,6 +111,6 @@ async function bootstrap() {
 
 bootstrap()
   .catch((error) => {
-    console.error('bootstrap error'); // eslint-disable-line no-console
+    console.error('server::bootstrap error'); // eslint-disable-line no-console
     console.error(error); // eslint-disable-line no-console
   });
