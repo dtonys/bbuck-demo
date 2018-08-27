@@ -8,7 +8,7 @@ const getCurrentSessionAndUser = SessionModule.getCurrentSessionAndUser;
 const deleteSession = SessionModule.deleteSession;
 const SESSION_COOKIE_NAME = SessionModule.SESSION_COOKIE_NAME;
 const EpicGamesMetaModule = require('../models/epic_games_meta');
-const EpicGamesService = '../services/epicGames';
+const EpicGamesService = require('../services/epicGames');
 const verifyPendingUser = EpicGamesService.verifyPendingUser;
 
 exports.signup = handleAsyncError(
