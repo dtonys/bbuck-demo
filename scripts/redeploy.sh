@@ -1,5 +1,5 @@
 #!/bin/sh
-cd ~/webapps/bbuck-demo
+cd ~/bbuck-demo
 git pull origin master
 yarn
 npm run build
