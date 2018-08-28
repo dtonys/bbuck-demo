@@ -11,8 +11,10 @@
     "start": "cross-env NODE_ENV=production PORT=3000 forever start --uid bbuck-demo --append src/server.js",
     "start-prod": "cross-env NODE_ENV=production PORT=80 forever start --uid bbuck-demo --append src/server.js",
     "stop": "forever stop bbuck-demo",
-    "start-login-polling": "node src/runEpicLoginFlow.js &",
-    "start-friends-polling": "node src/runEpicFriendFlow.js &",
+    "start-login-polling": "node src/runEpicLoginFlow.js",
+    "start-friends-polling": "node src/runEpicFriendFlow.js",
+    "start-login-polling-prod": "forever start --uid login-polling --append src/runEpicLoginFlow.js",
+    "start-friends-polling-prod": "forever start --uid friends-polling --append src/runEpicFriendFlow.js",
     "clean": "rimraf dist",
     "build-prod": "webpack --env production",
     "lint-js": "eslint -c .eslintrc.js ./src"
