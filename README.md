@@ -51,7 +51,7 @@ If a user is already in `pending_users` when they sign up, they'll be authentica
 ## API
 | Method | Url            | Params| Notes |
 | ------ | -------------- | ----- | ----- |
-| POST   | /api/signup    | email, password, fortnite_username | Signup a user and log them in |
+| POST   | /api/signup    | email, password, fortnite_username | Signup a user and set them as pending verification. |
 | POST   | /api/login     | email, password | Log a user in |
 | GET    | /api/logout    | | Log a user out
 | GET    | /api/session   | | Gets logged in user's data |
