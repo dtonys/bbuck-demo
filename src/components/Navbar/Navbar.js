@@ -78,12 +78,12 @@ class Navbar extends Component {
                 // <Menu.Item key="2" as={Link} to="/buy">
                 //   BUY
                 // </Menu.Item>,
-                <Menu.Item key="3" as={Link} to="/cash-out">
-                  CASH OUT
-                </Menu.Item>,
-                <Menu.Item key="4" as={Link} to="/dashboard">
-                  DASHBOARD
-                </Menu.Item>,
+                // <Menu.Item key="3" as={Link} to="/cash-out">
+                //   CASH OUT
+                // </Menu.Item>,
+                // <Menu.Item key="4" as={Link} to="/dashboard">
+                //   DASHBOARD
+                // </Menu.Item>,
                 <Menu.Item key="5" onClick={logout} >
                   LOGOUT
                 </Menu.Item>,

@@ -1,5 +1,5 @@
 .dashboard {
-  max-width: 400px;
+  max-width: 1000px;
   margin: auto;
   margin-top: 100px;
 }
@@ -30,4 +30,16 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+
+.contentWrap {
+  display: flex;
+}
+
+.contentLeft {
+  flex: 1;
+}
+
+.contentRight {
+  flex: 1;
 }

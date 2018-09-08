@@ -119,22 +119,22 @@ class PageLayout extends Component {
                   // >
                   //   BUY
                   // </Menu.Item>,
-                  <Menu.Item
-                    key="3"
-                    as={Link}
-                    to="/cash-out"
-                    onClick={this.closeSidebar}
-                  >
-                    CASH OUT
-                  </Menu.Item>,
-                  <Menu.Item
-                    key="4"
-                    as={Link}
-                    to="/dashboard"
-                    onClick={this.closeSidebar}
-                  >
-                    DASHBOARD
-                  </Menu.Item>,
+                  // <Menu.Item
+                  //   key="3"
+                  //   as={Link}
+                  //   to="/cash-out"
+                  //   onClick={this.closeSidebar}
+                  // >
+                  //   CASH OUT
+                  // </Menu.Item>,
+                  // <Menu.Item
+                  //   key="4"
+                  //   as={Link}
+                  //   to="/dashboard"
+                  //   onClick={this.closeSidebar}
+                  // >
+                  //   DASHBOARD
+                  // </Menu.Item>,
                   <Menu.Item
                     key="5"
                     onClick={this.onLogoutClick}
