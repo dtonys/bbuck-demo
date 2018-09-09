@@ -301,8 +301,9 @@ function getFriendUsernames( _accessToken, friendIdList ) {
         for ( let friendRequest of bodyObj ) {
           friendUsernameToIdMap[friendRequest.displayName] = friendRequest.id;
         }
+        resolve(friendUsernameToIdMap);
       }
-      resolve(friendUsernameToIdMap);
+      reject();
     }
     request(options, callback);
   });
