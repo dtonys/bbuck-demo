@@ -289,7 +289,7 @@ function getFriendUsernames( _accessToken, friendIdList ) {
       'Cache-Control': 'no-cache'
     };
     const options = {
-      url: `https://account-public-service-prod03.ol.epicgames.com/account/api/public/account?${queryString.stringify(friendIdList)}`,
+      url: `https://account-public-service-prod03.ol.epicgames.com/account/api/public/account?${queryString.stringify({ accountId: friendIdList })}`,
       headers: headers
     };
 
