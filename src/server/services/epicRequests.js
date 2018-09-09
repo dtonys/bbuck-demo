@@ -261,7 +261,7 @@ function getFriendIdList( _accessToken ) {
         const bodyObj = JSON.parse(body);
         console.log('getFriendIdList', bodyObj);
         for ( let friendRequest of bodyObj ) {
-          friendIdList.accountId.push( friendRequest.accountId );
+          friendIdList.push( friendRequest.accountId );
         }
         resolve( friendIdList );
       }
