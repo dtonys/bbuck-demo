@@ -41,7 +41,7 @@ const SignupForm = ({
           <RFField name="password" >
             {({ input }) => (
               <Form.Field >
-                <input {...input} type="password" placeholder="password" />
+                <input {...input} type="password" placeholder="bbuck password" />
               </Form.Field>
             )}
           </RFField>

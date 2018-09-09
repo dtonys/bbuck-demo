@@ -7,9 +7,7 @@ const createSessionWithCookie = SessionModule.createSessionWithCookie;
 const getCurrentSessionAndUser = SessionModule.getCurrentSessionAndUser;
 const deleteSession = SessionModule.deleteSession;
 const SESSION_COOKIE_NAME = SessionModule.SESSION_COOKIE_NAME;
-const EpicGamesMetaModule = require('../models/epic_games_meta');
-const EpicGamesService = require('../services/epicGames');
-const verifyPendingUser = EpicGamesService.verifyPendingUser;
+
 
 exports.signup = handleAsyncError(
   async ( req, res ) => {
@@ -87,13 +85,6 @@ exports.signup = handleAsyncError(
       email,
       password_hash: passwordHash,
     });
-
-    // if user is already a friend, send the verification email
-    const epicGamesMeta = await EpicGamesMetaModule.getInstance();
-    const friendsMap = JSON.parse(epicGamesMeta.friendMap);
-    if ( friendsMap[fortnite_username] ) {
-      await verifyPendingUser(fortnite_username);
-    }
 
     // return success
     res.json({
