@@ -86,8 +86,13 @@ class DashboardPage extends Component { // eslint-disable-line
             </div>
             <div style={{ marginBottom: 60 }} ></div>
             <div className={ styles.rows } >
-              { items.map(({ logoUrl, label, time, gained }, index) => (
-                <div className={ styles.row } key={index} >
+              { items.map(({
+                logoUrl, label, time, gained,
+              }, index) => (
+                <div
+                  className={ styles.row }
+                  key={index}
+                >
                   <div
                     className={ classnames( styles.rowItem, styles.rowItemIcon ) }
                   >
@@ -104,11 +109,13 @@ class DashboardPage extends Component { // eslint-disable-line
                   >
                     <div style={{
                       fontSize: 12,
-                    }} > { label } </div>
+                    }} > { label }
+                    </div>
                     <div style={{
                       fontSize: 10,
                       color: '#8A8A8A',
-                    }} > { time } </div>
+                    }} > { time }
+                    </div>
                   </div>
                   <div
                     className={ classnames( styles.rowItem, styles.rowItemGained ) }
@@ -120,7 +127,9 @@ class DashboardPage extends Component { // eslint-disable-line
                       color: '#ED4D50',
                       fontWeight: 800,
                       fontSize: 16,
-                    }} > { gained } </span>
+                    }} >
+                      { gained }
+                    </span>
                      <img
                         src="/img/bbuck_icon@2x.png"
                         style={{

@@ -6,11 +6,13 @@ const setCookieParser = require('set-cookie-parser');
 
 const username = encodeURIComponent('malcolm@bbuck.io');
 const password = '4thegamers';
+const userId = 'e07bfba854ba4cfa98d4133269703e7e';
 
 const client_id = '24a1bff3f90749efbfcbc576c626a282';
 const EPIC_DEVICE = '12b98c63b14a0e4e68e9ef8a4f70609f';
 const _epicSID = '29f4e8b013f8454b94064e16130d1b6d';
 const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) EpicGamesLauncher/7.14.2-4231683+++Portal+Release-Live UnrealEngine/4.18.0-4231683+++Portal+Release-Live Safari/537.36';
+
 
 let EPIC_SSO_SESSION = null;
 let EPIC_SSO_SESSION_INSTANCE = null;
@@ -24,8 +26,6 @@ function logError( error, response, body ) {
 
 function getEpicSSOSession() {
   return new Promise(( resolve, reject ) => {
-    const request = require('request');
-
     const headers = {
       'Host': 'accounts.launcher-website-prod07.ol.epicgames.com',
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
@@ -50,8 +50,8 @@ function getEpicSSOSession() {
           if ( cookie.name === 'EPIC_SSO_SESSION' ) EPIC_SSO_SESSION = cookie.value;
           if ( cookie.name === 'EPIC_SSO_SESSION_INSTANCE' ) EPIC_SSO_SESSION_INSTANCE = cookie.value;
         }
-        console.log('EPIC_SSO_SESSION', EPIC_SSO_SESSION);
-        console.log('EPIC_SSO_SESSION_INSTANCE', EPIC_SSO_SESSION_INSTANCE);
+        // console.log('EPIC_SSO_SESSION', EPIC_SSO_SESSION);
+        // console.log('EPIC_SSO_SESSION_INSTANCE', EPIC_SSO_SESSION_INSTANCE);
         resolve();
         return;
       }
@@ -92,7 +92,7 @@ EPIC_SSO_SESSION_INSTANCE=${EPIC_SSO_SESSION_INSTANCE}`
             XSRF_Token = cookie.value;
           }
         }
-        console.log('XSRF_Token', XSRF_Token);
+        // console.log('XSRF_Token', XSRF_Token);
         resolve();
         return;
       }
@@ -123,9 +123,7 @@ EPIC_SSO_SESSION_INSTANCE=${EPIC_SSO_SESSION_INSTANCE}; \
 _epicSID=${_epicSID}`
     };
 
-    const dataString = `X-XSRF-URI=%2Flogin%2FdoLauncherLogin&fromForm=yes&authType=&linkExtAuth=&client_id=${client_id}&redirectUrl=https%3A%2F%2Faccounts.launcher-website-prod07.ol.epicgames.com%2Flogin%2FshowPleaseWait%3Fclient_id%3D${client_id}%26rememberEmail%3Dfalse&\
-epic_username=${username}&\
-password=${password}`;
+    const dataString = `X-XSRF-URI=%2Flogin%2FdoLauncherLogin&fromForm=yes&authType=&linkExtAuth=&client_id=${client_id}&redirectUrl=https%3A%2F%2Faccounts.launcher-website-prod07.ol.epicgames.com%2Flogin%2FshowPleaseWait%3Fclient_id%3D${client_id}%26rememberEmail%3Dfalse&epic_username=${username}&password=${password}`;
 
     const options = {
       url: 'https://accounts.launcher-website-prod07.ol.epicgames.com/login/doLauncherLogin',
@@ -143,8 +141,8 @@ password=${password}`;
           if ( cookie.name === 'EPIC_BEARER_TOKEN' ) EPIC_BEARER_TOKEN = cookie.value;
           if ( cookie.name === 'EPIC_SSO_SESSION_INSTANCE' ) EPIC_SSO_SESSION_INSTANCE = cookie.value;
         }
-        console.log('EPIC_BEARER_TOKEN', EPIC_BEARER_TOKEN);
-        console.log('EPIC_SSO_SESSION_INSTANCE', EPIC_SSO_SESSION_INSTANCE);
+        // console.log('EPIC_BEARER_TOKEN', EPIC_BEARER_TOKEN);
+        // console.log('EPIC_SSO_SESSION_INSTANCE', EPIC_SSO_SESSION_INSTANCE);
         resolve();
         return;
       }
@@ -183,7 +181,7 @@ EPIC_BEARER_TOKEN=${EPIC_BEARER_TOKEN}; EPIC_STAY_SIGNED_IN=false`
       if ( !error && response.statusCode === 200 ) {
         matches = body.match(/loginWithExchangeCode\('(\w+)'/);
         exchangeCode = matches[1];
-        console.log('exchangeCode', exchangeCode);
+        // console.log('exchangeCode', exchangeCode);
         resolve();
         return;
       }
@@ -224,7 +222,7 @@ function getAccessToken() {
         const bodyStr = JSON.stringify(body)
         const bodyObj = JSON.parse(body);
         accessToken = bodyObj.access_token;
-        console.log('accessToken', accessToken);
+        // console.log('accessToken', accessToken);
         resolve(accessToken);
         return;
       }
@@ -235,12 +233,10 @@ function getAccessToken() {
   });
 }
 
-let friendIdMap = {};
-let friendIdList = {
-  accountId: [],
-};
+
 function getFriendIdList( _accessToken ) {
   return new Promise(( resolve, reject ) => {
+    let friendIdList = [];
     const headers = {
       'Host': 'friends-public-service-prod06.ol.epicgames.com',
       'Content-Type': 'application/json',
@@ -254,32 +250,30 @@ function getFriendIdList( _accessToken ) {
     };
 
     const options = {
-      url: 'https://friends-public-service-prod06.ol.epicgames.com/friends/api/public/friends/e07bfba854ba4cfa98d4133269703e7e?includePending=true',
+      url: `https://friends-public-service-prod06.ol.epicgames.com/friends/api/public/friends/${userId}?includePending=true`,
       headers: headers
     };
 
     function callback(error, response, body) {
       if ( error || response.statusCode !== 200 ) logError(error, response, body);
       if ( !error && response.statusCode == 200 ) {
+        let friendIdList = [];
         const bodyObj = JSON.parse(body);
+        console.log('getFriendIdList', bodyObj);
         for ( let friendRequest of bodyObj ) {
-          if ( !friendIdMap[friendRequest.accountId] ) {
-            friendIdMap[friendRequest.accountId] = true;
-            friendIdList.accountId.push( friendRequest.accountId );
-          }
+          friendIdList.accountId.push( friendRequest.accountId );
         }
-        console.log('friendIdList', friendIdList);
+        resolve( friendIdList );
       }
-      resolve();
+      reject();
     }
     request(options, callback);
   });
 }
 
-function getFriendUsernames( _accessToken ) {
-  let friendMap = {};
-  // skip API if we have no friends in our list yet
-  if ( !friendIdList.accountId.length ) {
+function getFriendUsernames( _accessToken, friendIdList ) {
+  // if we have no friends on our list, pass empty object
+  if ( !friendIdList.length ) {
     return Promise.resolve({});
   }
   return new Promise(( resolve, reject ) => {
@@ -294,25 +288,21 @@ function getFriendUsernames( _accessToken ) {
       'Pragma': 'no-cache',
       'Cache-Control': 'no-cache'
     };
-
-    console.log('queryString.stringify(friendIdList)', queryString.stringify(friendIdList));
-
     const options = {
-      url: `https://account-public-service-prod03.ol.epicgames.com/account/api/public/account?\
-${queryString.stringify(friendIdList)}`,
+      url: `https://account-public-service-prod03.ol.epicgames.com/account/api/public/account?${queryString.stringify(friendIdList)}`,
       headers: headers
     };
 
     function callback(error, response, body) {
       if ( error || response.statusCode !== 200 ) logError(error, response, body);
       if ( !error && response.statusCode == 200 ) {
+        let friendUsernameToIdMap = {};
         const bodyObj = JSON.parse(body);
         for ( let friendRequest of bodyObj ) {
-          console.log(friendRequest);
-          friendMap[friendRequest.displayName] = friendRequest.id;
+          friendUsernameToIdMap[friendRequest.displayName] = friendRequest.id;
         }
       }
-      resolve(friendMap);
+      resolve(friendUsernameToIdMap);
     }
     request(options, callback);
   });
@@ -336,9 +326,45 @@ function loginFlow() {
 
 function getFriendsFlow( _accessToken ) {
   return getFriendIdList( _accessToken )
-    .then(() => {
-      return getFriendUsernames( _accessToken );
+    .then(( friendIdList ) => {
+      return getFriendUsernames( _accessToken, friendIdList );
     })
+}
+
+exports.removeFriendRequest = function removeFriendRequest( friendId, _accessToken ) {
+  return new Promise(( resolve, reject ) => {
+    const request = require('request');
+    const headers = {
+      'Host': 'friends-public-service-prod06.ol.epicgames.com',
+      'Content-Type': 'application/json',
+      'X-Epic-Correlation-ID': 'UE4-12b98c63b14a0e4e68e9ef8a4f70609f-8EDF03F0324BD386AB94F58EC2BC2C3C-C91031B9724CC4C74D597991F9101C3D',
+      'Accept': '*/*',
+      'User-Agent': 'game=UELauncher, engine=UE4, build=7.14.2-4231683+++Portal+Release-Live',
+      'Authorization': `bearer ${_accessToken}`,
+      'Accept-Language': 'en-us',
+      'Pragma': 'no-cache',
+      'Cache-Control': 'no-cache'
+    };
+
+    const options = {
+      url: `https://friends-public-service-prod06.ol.epicgames.com/friends/api/public/friends/${userId}/${friendId}`,
+      method: 'DELETE',
+      headers: headers
+    };
+
+    function callback(error, response, body) {
+      if ( error || response.statusCode !== 200 ) logError(error, response, body);
+      if ( !error && response.statusCode == 204 ) {
+        // console.log('removeFriendRequest success');
+        resolve();
+        return;
+      }
+      reject();
+    }
+    request(options, callback);
+  });
+
+  return Promise.resolve();
 }
 
 // returns access token required for making logged in requests
@@ -359,12 +385,10 @@ exports.runEpicLoginFlow = function runEpicLoginFlow() {
 exports.runEpicGetFriendsFlow = function runEpicGetFriendsFlow( _accessToken ) {
   return getFriendsFlow( _accessToken )
     .then((friendMap) => {
-      console.log('runEpicGetFriendsFlow done:');
-      console.log('friendMap', friendMap);
       return friendMap;
     })
     .catch((err) => {
-      console.log('login flow error');
+      console.log('runEpicGetFriendsFlow flow error');
       console.log(err);
     });
 };

@@ -4,8 +4,6 @@ const EPIC_GAMES_META_ID = 'EPIC_GAMES_META_ID';
 
 const EpicGamesMetaSchema = new Schema({
   _id: { type: String, default: EPIC_GAMES_META_ID },
-  // { <user_name>: <user_id>, <user_name>: <user_id> }
-  friendMap: { type: String, default: '{}' },
   accessToken: { type: String },
 });
 
