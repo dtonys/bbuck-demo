@@ -9,7 +9,7 @@
     "dev": "cross-env NODE_ENV=development nodemon --delay 2 --watch src/server.js --watch src/server --exec node src/server.js",
     "build": "npm-run-all clean build-prod",
     "start": "cross-env NODE_ENV=production PORT=3000 forever start --uid bbuck-demo --append src/server.js",
-    "start-prod": "pm2 start pm2-ecosystem.config.js --only bbuck-demo",
+    "start-prod": "authbind --deep pm2 start -u ubuntu pm2-ecosystem.config.js --only bbuck-demo",
     "restart-prod": "pm2 restart pm2-ecosystem.config.js --only bbuck-demo",
     "stop": "forever stop bbuck-demo",
     "start-login-polling": "node src/runEpicLoginFlow.js",
