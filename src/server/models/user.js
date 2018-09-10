@@ -13,6 +13,17 @@ const UserSchema = new Schema({
     type: String, unique: true, dropDups: true,
   },
   password_hash: String,
+  username: {
+    type: String, unique: true, dropDups: true,
+  },
+  stellar: {
+    account: {
+      type: String, unique: true, dropDups: true,
+    },
+    sequence: {
+      type: Number, unique: true, dropDups: true,
+    },
+  },
 }, options);
 
 const User = mongoose.model('user', UserSchema);
