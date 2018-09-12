@@ -10,7 +10,7 @@ require('./models/session');
 require('./models/user');
 require('./models/pending_user');
 require('./models/epic_games_meta');
-
+require('./models/counter');
 
 function mongoConnect() {
   return new Promise(( resolve, reject ) => {
@@ -37,5 +37,9 @@ module.exports = () => {
     .then(() => {
       const EpicGamesService = require('./services/epicGames');
       return EpicGamesService.initialize();
+    })
+    .then(() => {
+      const CounterModule = require('./models/counter');
+      return CounterModule.getOrCreateInstance();
     });
 };

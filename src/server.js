@@ -100,9 +100,6 @@ async function bootstrap() {
   // setup mongodb
   await require('./server/setupMongo')();
 
-  // // initialize epic games service
-  // await require('./server/services/epicGames').initialize();
-
   // initialize express
   const app = createExpressApp();
   await startExpressServer(app);
