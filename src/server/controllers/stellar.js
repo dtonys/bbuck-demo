@@ -41,12 +41,12 @@ exports.federation = handleAsyncError(
         stellar_address: q,
         account: user.stellar.account,
       });
-    } else {
-      res
-        .status(422)
-        .json({
-          error: 'User not found',
-        });
+      return;
     }
+    res
+      .status(422)
+      .json({
+        error: 'User not found',
+      });
   }
 );

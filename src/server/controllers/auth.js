@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const handleAsyncError = require('../helpers/express').handleAsyncError;
 const SessionModule = require('../models/session');
 const stellar = require('../services/stellar');
-const nextUserSequence = require('../models/counters').nextUserSequence;
+const nextUserSequence = require('../models/counter').nextUserSequence;
 const createSessionWithCookie = SessionModule.createSessionWithCookie;
 const getCurrentSessionAndUser = SessionModule.getCurrentSessionAndUser;
 const deleteSession = SessionModule.deleteSession;
@@ -233,6 +233,12 @@ exports.verify = handleAsyncError(
     const userSequence = await nextUserSequence();
     const account = stellar.getAccount(userSequence);
 
+    console.log('userSequence');
+    console.log(userSequence);
+
+    console.log('stellar account');
+    console.log(account);
+
     // copy info from pending user to validated user
     const user = await User.create({
       fortnite_username: pendingUser.fortnite_username,
@@ -245,7 +251,9 @@ exports.verify = handleAsyncError(
       },
     });
     if (user) {
-      await stellar.createUserWallet(account, stellar.getKeypair(userSequence));
+      const wallet = await stellar.createUserWallet(account, stellar.getKeypair(userSequence));
+      console.log('wallet');
+      console.log(wallet);
     }
 
     // redirect to login page
