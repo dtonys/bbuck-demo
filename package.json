@@ -18,12 +18,14 @@
     "restart-login-polling-prod": "pm2 restart pm2-ecosystem.config.js --only login-polling",
     "start-friends-polling-prod": "pm2 start pm2-ecosystem.config.js --only friends-polling",
     "restart-friends-polling-prod": "pm2 restart pm2-ecosystem.config.js --only friends-polling",
+    "console": "babel-node ./src/console.js",
     "clean": "rimraf dist",
     "build-prod": "webpack --env production",
     "lint-js": "eslint -c .eslintrc.js ./src"
   },
   "dependencies": {
     "autoprefixer": "^8.5.0",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.4",
